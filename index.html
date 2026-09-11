@@ -131,11 +131,29 @@
     overflow:hidden;
   }
 
+  .edit-header{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:6px 10px 0;
+  }
+  .edit-header-spacer{flex:1;}
+  .edit-header-label{
+    flex-shrink:0;
+    width:58px;
+    text-align:center;
+    font-size:9px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+
   .edit-row{
     display:flex;
     align-items:center;
     gap:7px;
-    padding:7px 10px;
+    padding:6px 10px;
     border-top:1px solid var(--line);
   }
   .edit-row:first-child{border-top:none;}
@@ -161,8 +179,10 @@
 
   .field{
     flex-shrink:0;
+    width:58px;
     display:flex;
     align-items:center;
+    justify-content:center;
     gap:3px;
     background:var(--surface-2);
     border:1px solid var(--line);
@@ -175,27 +195,40 @@
     font-size:11px;
     color:var(--ink-muted);
   }
-  .cap-input, .pct-input{
+  .pct-input{
     font-family:var(--font-mono);
     font-weight:600;
+    font-size:15px;
     color:var(--ink);
     background:transparent;
     border:none;
     text-align:right;
     padding:0;
+    width:32px;
   }
-  .cap-input{ width:30px; font-size:13px; }
-  .pct-input{ width:36px; font-size:15px; }
-  .cap-input::-webkit-outer-spin-button, .cap-input::-webkit-inner-spin-button,
   .pct-input::-webkit-outer-spin-button, .pct-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
-  .cap-input, .pct-input{-moz-appearance:textfield;}
-  .cap-input:focus, .pct-input:focus{outline:none;}
+  .pct-input{-moz-appearance:textfield;}
+  .pct-input:focus{outline:none;}
 
   input:focus-visible{
     outline:2px solid var(--accent);
     outline-offset:2px;
     border-radius:4px;
   }
+
+  .pedir-value{
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:15px;
+    text-align:right;
+    color:var(--ink-muted);
+  }
+  .result-field.state-below{border-color:var(--accent);}
+  .result-field.state-below .pedir-value{color:var(--accent);}
+  .result-field.state-exact{border-color:var(--safe);}
+  .result-field.state-exact .pedir-value{color:var(--safe);}
+  .result-field.state-over{border-color:var(--over);}
+  .result-field.state-over .pedir-value{color:var(--over);}
 
   .tank-row{
     padding:8px 12px;
@@ -313,25 +346,30 @@
   <section class="edit-section">
     <p class="section-label">Niveles actuales</p>
     <div class="edit-group">
+      <div class="edit-header">
+        <span class="edit-header-spacer"></span>
+        <span class="edit-header-label">Real</span>
+        <span class="edit-header-label">Pedir</span>
+      </div>
       <div class="edit-row" data-index="0">
         <input class="name-input" type="text" maxlength="24" value="Tanque 1" autocomplete="off" aria-label="Nombre del tanque 1">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 1 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="55" autocomplete="off" aria-label="Porcentaje actual del tanque 1"><span class="field-suffix">%</span></span>
+        <span class="field result-field state-below"><span class="pedir-value">25</span><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="1">
         <input class="name-input" type="text" maxlength="24" value="Tanque 2" autocomplete="off" aria-label="Nombre del tanque 2">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 2 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="72" autocomplete="off" aria-label="Porcentaje actual del tanque 2"><span class="field-suffix">%</span></span>
+        <span class="field result-field state-below"><span class="pedir-value">8</span><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="2">
         <input class="name-input" type="text" maxlength="24" value="Tanque 3" autocomplete="off" aria-label="Nombre del tanque 3">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 3 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="80" autocomplete="off" aria-label="Porcentaje actual del tanque 3"><span class="field-suffix">%</span></span>
+        <span class="field result-field state-exact"><span class="pedir-value">0</span><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="3">
         <input class="name-input" type="text" maxlength="24" value="Tanque 4" autocomplete="off" aria-label="Nombre del tanque 4">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 4 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="91" autocomplete="off" aria-label="Porcentaje actual del tanque 4"><span class="field-suffix">%</span></span>
+        <span class="field result-field state-over"><span class="pedir-value">-11</span><span class="field-suffix">%</span></span>
       </div>
     </div>
   </section>
@@ -350,7 +388,7 @@
         </div>
         <div class="combo-line state-below">
           <span class="chip-dot"></span>
-          <span class="combo-text">Faltan 25% · Pedí 250 gal</span>
+          <span class="combo-text">Faltan 25% para el 80%</span>
         </div>
       </div>
 
@@ -365,7 +403,7 @@
         </div>
         <div class="combo-line state-below">
           <span class="chip-dot"></span>
-          <span class="combo-text">Faltan 8% · Pedí 80 gal</span>
+          <span class="combo-text">Faltan 8% para el 80%</span>
         </div>
       </div>
 
@@ -395,7 +433,7 @@
         </div>
         <div class="combo-line state-over">
           <span class="chip-dot"></span>
-          <span class="combo-text">Excede 11% · 110 gal de más</span>
+          <span class="combo-text">Excede 11% sobre el 80%</span>
         </div>
       </div>
     </div>
@@ -408,10 +446,10 @@
 (function(){
   const STORAGE_KEY = 'glp-tanks-v1';
   const DEFAULT_TANKS = [
-    {name:'Tanque 1', pct:55, cap:1000},
-    {name:'Tanque 2', pct:72, cap:1000},
-    {name:'Tanque 3', pct:80, cap:1000},
-    {name:'Tanque 4', pct:91, cap:1000}
+    {name:'Tanque 1', pct:55},
+    {name:'Tanque 2', pct:72},
+    {name:'Tanque 3', pct:80},
+    {name:'Tanque 4', pct:91}
   ];
 
   function load(){
@@ -419,10 +457,7 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return null;
       const data = JSON.parse(raw);
-      if(data && Array.isArray(data.tanks) && data.tanks.length===4){
-        data.tanks = data.tanks.map(t=>({cap:null, ...t}));
-        return data;
-      }
+      if(data && Array.isArray(data.tanks) && data.tanks.length===4) return data;
     }catch(e){}
     return null;
   }
@@ -465,36 +500,33 @@
       refs.fill.style.width = '0%';
       refs.combo.className = 'combo-line state-idle';
       refs.comboText.textContent = 'Ingresá el nivel actual';
+      refs.pedirBox.className = 'field result-field state-idle';
+      refs.pedirValue.textContent = '–';
       return;
     }
     refs.fill.style.width = clamp(pct,0,100) + '%';
     const diff = pct - 80;
-    let state, pctPart;
+    let state, text;
     if(Math.abs(diff) < 0.05){
       state = 'exact';
-      pctPart = '¡Exacto! En el 80%';
+      text = '¡Exacto! En el 80%';
     } else if(diff > 0){
       state = 'over';
-      pctPart = `Excede ${formatNum(diff)}%`;
+      text = `Excede ${formatNum(diff)}% sobre el 80%`;
     } else {
       state = 'below';
-      pctPart = `Faltan ${formatNum(-diff)}%`;
-    }
-    let combo = pctPart;
-    const cap = tank.cap;
-    if(cap && cap > 0 && state !== 'exact'){
-      const qty = formatNum(Math.abs(diff) * cap / 100);
-      combo += state === 'over' ? ` · ${qty} gal de más` : ` · Pedí ${qty} gal`;
+      text = `Faltan ${formatNum(-diff)}% para el 80%`;
     }
     refs.fill.className = 'hgauge-fill state-' + state;
     refs.combo.className = 'combo-line state-' + state;
-    refs.comboText.textContent = combo;
+    refs.comboText.textContent = text;
+    refs.pedirBox.className = 'field result-field state-' + state;
+    refs.pedirValue.textContent = formatNum(-diff);
   }
 
   function syncRow(entry){
     entry.nameInput.value = entry.tank.name;
     entry.nameDisplay.textContent = entry.tank.name;
-    entry.capInput.value = entry.tank.cap === null || entry.tank.cap === undefined ? '' : entry.tank.cap;
     entry.pctInput.value = entry.tank.pct === null || entry.tank.pct === undefined ? '' : entry.tank.pct;
     updateCard(entry.refs, entry.tank);
   }
@@ -507,15 +539,16 @@
     const gaugeEl = gaugeRows[index];
     const tank = tanks[index];
     const nameInput = editEl.querySelector('.name-input');
-    const capInput = editEl.querySelector('.cap-input');
     const pctInput = editEl.querySelector('.pct-input');
     const nameDisplay = gaugeEl.querySelector('.name-display');
     const refs = {
       fill: gaugeEl.querySelector('.hgauge-fill'),
       combo: gaugeEl.querySelector('.combo-line'),
-      comboText: gaugeEl.querySelector('.combo-text')
+      comboText: gaugeEl.querySelector('.combo-text'),
+      pedirBox: editEl.querySelector('.result-field'),
+      pedirValue: editEl.querySelector('.pedir-value')
     };
-    const entry = {tank, nameInput, capInput, pctInput, nameDisplay, refs};
+    const entry = {tank, nameInput, pctInput, nameDisplay, refs};
     cardEntries.push(entry);
 
     syncRow(entry);
@@ -525,23 +558,6 @@
       nameDisplay.textContent = tank.name;
       dismissBanner();
       save();
-    });
-
-    capInput.addEventListener('input', ()=>{
-      const v = capInput.value;
-      tank.cap = v === '' ? null : parseFloat(v);
-      dismissBanner();
-      updateCard(refs, tank);
-      save();
-    });
-
-    capInput.addEventListener('blur', ()=>{
-      if(tank.cap !== null && tank.cap !== undefined && !Number.isNaN(tank.cap)){
-        tank.cap = Math.max(0, tank.cap);
-        capInput.value = formatNum(tank.cap);
-        updateCard(refs, tank);
-        save();
-      }
     });
 
     pctInput.addEventListener('input', ()=>{
