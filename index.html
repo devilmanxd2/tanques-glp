@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tanques GLP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -47,7 +53,7 @@
   }
 
   *{box-sizing:border-box;}
-  body{
+  html,body{
     margin:0;
     background:var(--bg);
     color:var(--ink);
@@ -58,10 +64,10 @@
   .page{
     max-width:520px;
     margin:0 auto;
-    padding:18px 16px 24px;
+    padding:16px 16px 14px;
   }
 
-  header.hero{margin-bottom:10px;}
+  header.hero{margin-bottom:7px;}
   .eyebrow{
     font-family:var(--font-body);
     font-size:10px;
@@ -95,10 +101,10 @@
     background:var(--surface-2);
     border:1px solid var(--line);
     border-radius:8px;
-    padding:7px 10px;
+    padding:6px 10px;
     font-size:11px;
     color:var(--ink-muted);
-    margin:10px 0 0;
+    margin:7px 0 0;
   }
   .example-banner[hidden]{display:none;}
   .example-banner .dot{
@@ -114,8 +120,8 @@
     color:var(--accent);
     margin:0 0 5px;
   }
-  .edit-section{margin-top:12px;}
-  .gauge-section{margin-top:14px;}
+  .edit-section{margin-top:9px;}
+  .gauge-section{margin-top:11px;}
 
   .edit-group, .tank-group{
     background:var(--surface);
@@ -129,7 +135,7 @@
     display:flex;
     align-items:center;
     gap:7px;
-    padding:8px 10px;
+    padding:7px 10px;
     border-top:1px solid var(--line);
   }
   .edit-row:first-child{border-top:none;}
@@ -192,10 +198,10 @@
   }
 
   .tank-row{
-    padding:10px 12px;
+    padding:8px 12px;
     display:flex;
     flex-direction:column;
-    gap:5px;
+    gap:4px;
     border-top:1px solid var(--line);
   }
   .tank-row:first-child{border-top:none;}
@@ -282,7 +288,7 @@
   .combo-line.state-idle .chip-dot{background:var(--ink-muted);}
 
   .footnote{
-    margin-top:12px;
+    margin-top:8px;
     font-size:10.5px;
     color:var(--ink-muted);
     text-align:center;
@@ -292,6 +298,8 @@
     *{transition:none !important;}
   }
 </style>
+</head>
+<body>
 
 <div class="page">
   <header class="hero">
@@ -559,3 +567,5 @@
   });
 })();
 </script>
+</body>
+</html>
