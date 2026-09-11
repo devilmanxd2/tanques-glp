@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tanques GLP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#EFF3F3;
+    --surface:#FFFFFF;
+    --surface-2:#F4F8F8;
+    --ink:#131C1E;
+    --ink-muted:#5B6C6E;
+    --accent:#146B72;
+    --line:#DCE6E6;
+    --safe:#2E9E5B;
+    --over:#D14B3F;
+    --shadow:rgba(19,28,30,0.07);
+
+    --font-display:'Big Shoulders Display','Arial Narrow',sans-serif;
+    --font-body:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --font-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0D1415;
+      --surface:#162020;
+      --surface-2:#1B2726;
+      --ink:#E7EEEE;
+      --ink-muted:#8FA3A3;
+      --accent:#4FC1C9;
+      --line:#273534;
+      --safe:#4CC17E;
+      --over:#E8695C;
+      --shadow:rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0D1415;
+    --surface:#162020;
+    --surface-2:#1B2726;
+    --ink:#E7EEEE;
+    --ink-muted:#8FA3A3;
+    --accent:#4FC1C9;
+    --line:#273534;
+    --safe:#4CC17E;
+    --over:#E8695C;
+    --shadow:rgba(0,0,0,0.45);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .page{
+    max-width:640px;
+    margin:0 auto;
+    padding:28px 20px 56px;
+  }
+
+  header.hero{margin-bottom:18px;}
+  .eyebrow{
+    font-family:var(--font-body);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 6px;
+  }
+  h1{
+    font-family:var(--font-display);
+    font-size:clamp(2.1rem,9vw,2.75rem);
+    font-weight:700;
+    letter-spacing:.01em;
+    line-height:1;
+    margin:0 0 12px;
+    text-wrap:balance;
+  }
+  .safety-note{
+    font-size:14px;
+    line-height:1.55;
+    color:var(--ink-muted);
+    max-width:46ch;
+    margin:0;
+  }
+  .safety-note b{color:var(--ink);font-weight:600;}
+
+  .example-banner{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:12.5px;
+    color:var(--ink-muted);
+    margin:18px 0;
+  }
+  .example-banner[hidden]{display:none;}
+  .example-banner .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--accent);flex-shrink:0;
+  }
+
+  .tank-group{
+    margin-top:18px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 1px 2px var(--shadow);
+    overflow:hidden;
+  }
+
+  .tank-row{
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    border-top:1px solid var(--line);
+  }
+  .tank-row:first-child{border-top:none;}
+
+  .profile-row{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .name-input{
+    font-family:var(--font-display);
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+    background:transparent;
+    border:none;
+    border-bottom:1px dashed transparent;
+    padding:2px 0;
+    flex:1;
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .name-input:hover,.name-input:focus{border-bottom-color:var(--line);}
+  .name-input:focus-visible{outline:none;}
+
+  .cap-field{
+    flex-shrink:0;
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+  }
+  .cap-input{
+    font-family:var(--font-mono);
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-muted);
+    background:transparent;
+    border:none;
+    border-bottom:1px dashed transparent;
+    width:36px;
+    text-align:right;
+    padding:1px 0;
+  }
+  .cap-input:hover,.cap-input:focus{border-bottom-color:var(--line);}
+  .cap-input::-webkit-outer-spin-button,
+  .cap-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .cap-input{-moz-appearance:textfield;}
+  .cap-suffix{
+    font-size:11px;
+    color:var(--ink-muted);
+  }
+
+  .pct-row{
+    display:flex;
+    align-items:baseline;
+    gap:4px;
+  }
+  .pct-input{
+    font-family:var(--font-mono);
+    font-size:33px;
+    font-weight:600;
+    color:var(--ink);
+    background:transparent;
+    border:none;
+    width:92px;
+    padding:0;
+  }
+  .pct-input::-webkit-outer-spin-button,
+  .pct-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .pct-input{-moz-appearance:textfield;}
+  .pct-suffix{
+    font-family:var(--font-mono);
+    font-size:18px;
+    color:var(--ink-muted);
+  }
+
+  input:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+
+  .hgauge{
+    position:relative;
+    width:100%;
+    height:48px;
+  }
+  .hgauge-track{
+    position:absolute;
+    left:0;right:0;top:0;
+    height:40px;
+    background:var(--surface-2);
+    border:1.5px solid var(--line);
+    border-radius:20px;
+    overflow:hidden;
+  }
+  .hgauge-fill{
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:0%;
+    transition:width .35s ease, background-color .3s ease;
+  }
+  .hgauge-fill.state-below{background:var(--accent);}
+  .hgauge-fill.state-exact{background:var(--safe);}
+  .hgauge-fill.state-over{background:var(--over);}
+  .hgauge-fill.state-idle{background:var(--line);}
+  .hgauge-marker{
+    position:absolute;
+    top:0;bottom:0;left:80%;
+    border-left:2px dashed var(--ink-muted);
+    opacity:.55;
+  }
+  .hgauge-marker-label{
+    position:absolute;
+    left:80%;top:-15px;
+    transform:translateX(-50%);
+    font-family:var(--font-mono);
+    font-size:9px;
+    color:var(--ink-muted);
+    white-space:nowrap;
+  }
+  .hgauge-leg{
+    position:absolute;
+    top:40px;
+    width:10px;height:6px;
+    margin-left:-5px;
+    background:var(--line);
+    border-radius:0 0 3px 3px;
+  }
+  .hgauge-leg.leg-a{left:25%;}
+  .hgauge-leg.leg-b{left:75%;}
+
+  .result-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:6px 11px;
+    border-radius:999px;
+    font-size:12.5px;
+    font-weight:600;
+    width:fit-content;
+    max-width:100%;
+    background:var(--surface-2);
+    color:var(--ink);
+  }
+  .result-chip .result-text{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .chip-dot{
+    width:7px;height:7px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+  .result-chip.state-below{color:var(--accent);background:var(--surface-2);}
+  .result-chip.state-below .chip-dot{background:var(--accent);}
+  .result-chip.state-exact{color:var(--safe);background:color-mix(in srgb, var(--safe) 14%, var(--surface));}
+  .result-chip.state-exact .chip-dot{background:var(--safe);}
+  .result-chip.state-over{color:var(--over);background:color-mix(in srgb, var(--over) 14%, var(--surface));}
+  .result-chip.state-over .chip-dot{background:var(--over);}
+  .result-chip.state-idle{color:var(--ink-muted);}
+  .result-chip.state-idle .chip-dot{background:var(--ink-muted);}
+
+  .order-line{
+    font-size:12.5px;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .order-line[hidden]{display:none;}
+  .order-line .order-num{
+    font-family:var(--font-mono);
+    font-weight:700;
+  }
+  .order-line.state-below .order-num{color:var(--accent);}
+  .order-line.state-exact .order-num{color:var(--safe);}
+  .order-line.state-over .order-num{color:var(--over);}
+  .order-line.state-empty{color:var(--ink-muted);}
+
+  .footnote{
+    margin-top:22px;
+    font-size:12px;
+    color:var(--ink-muted);
+    text-align:center;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="hero">
+    <p class="eyebrow">Control de llenado</p>
+    <h1>Tanques GLP</h1>
+    <p class="safety-note">El límite técnico de carga es <b>80%</b>: ese 20% libre deja espacio para la expansión térmica del gas líquido. Ingresá el nivel y la capacidad de cada tanque para saber cuánto falta y cuántos litros pedirle al despachador.</p>
+  </header>
+
+  <p class="example-banner" id="exampleBanner"><span class="dot"></span>Valores de ejemplo — reemplazalos con tus niveles reales.</p>
+
+  <main class="tank-group">
+    <div class="tank-row" data-index="0">
+      <div class="profile-row">
+        <input class="name-input" type="text" maxlength="24" value="Tanque 1" autocomplete="off" aria-label="Nombre del tanque 1">
+        <span class="cap-field">
+          <input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="300" autocomplete="off" aria-label="Capacidad del tanque 1 en litros">
+          <span class="cap-suffix">L</span>
+        </span>
+      </div>
+      <div class="pct-row">
+        <input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="55" autocomplete="off" aria-label="Porcentaje actual del tanque 1">
+        <span class="pct-suffix">%</span>
+      </div>
+      <div class="hgauge">
+        <div class="hgauge-marker-label">80%</div>
+        <div class="hgauge-track">
+          <div class="hgauge-fill state-below" style="width:55%"></div>
+          <div class="hgauge-marker"></div>
+        </div>
+        <div class="hgauge-leg leg-a"></div>
+        <div class="hgauge-leg leg-b"></div>
+      </div>
+      <div class="result-chip state-below">
+        <span class="chip-dot"></span>
+        <span class="result-text">Faltan 25% para el 80%</span>
+      </div>
+      <div class="order-line state-below">Pedí <span class="order-num">75 L</span> al despachador</div>
+    </div>
+
+    <div class="tank-row" data-index="1">
+      <div class="profile-row">
+        <input class="name-input" type="text" maxlength="24" value="Tanque 2" autocomplete="off" aria-label="Nombre del tanque 2">
+        <span class="cap-field">
+          <input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="300" autocomplete="off" aria-label="Capacidad del tanque 2 en litros">
+          <span class="cap-suffix">L</span>
+        </span>
+      </div>
+      <div class="pct-row">
+        <input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="72" autocomplete="off" aria-label="Porcentaje actual del tanque 2">
+        <span class="pct-suffix">%</span>
+      </div>
+      <div class="hgauge">
+        <div class="hgauge-marker-label">80%</div>
+        <div class="hgauge-track">
+          <div class="hgauge-fill state-below" style="width:72%"></div>
+          <div class="hgauge-marker"></div>
+        </div>
+        <div class="hgauge-leg leg-a"></div>
+        <div class="hgauge-leg leg-b"></div>
+      </div>
+      <div class="result-chip state-below">
+        <span class="chip-dot"></span>
+        <span class="result-text">Faltan 8% para el 80%</span>
+      </div>
+      <div class="order-line state-below">Pedí <span class="order-num">24 L</span> al despachador</div>
+    </div>
+
+    <div class="tank-row" data-index="2">
+      <div class="profile-row">
+        <input class="name-input" type="text" maxlength="24" value="Tanque 3" autocomplete="off" aria-label="Nombre del tanque 3">
+        <span class="cap-field">
+          <input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="500" autocomplete="off" aria-label="Capacidad del tanque 3 en litros">
+          <span class="cap-suffix">L</span>
+        </span>
+      </div>
+      <div class="pct-row">
+        <input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="80" autocomplete="off" aria-label="Porcentaje actual del tanque 3">
+        <span class="pct-suffix">%</span>
+      </div>
+      <div class="hgauge">
+        <div class="hgauge-marker-label">80%</div>
+        <div class="hgauge-track">
+          <div class="hgauge-fill state-exact" style="width:80%"></div>
+          <div class="hgauge-marker"></div>
+        </div>
+        <div class="hgauge-leg leg-a"></div>
+        <div class="hgauge-leg leg-b"></div>
+      </div>
+      <div class="result-chip state-exact">
+        <span class="chip-dot"></span>
+        <span class="result-text">¡Exacto! Estás en el 80%</span>
+      </div>
+      <div class="order-line state-exact">Ya estás en el punto justo <span class="order-num">(0 L)</span></div>
+    </div>
+
+    <div class="tank-row" data-index="3">
+      <div class="profile-row">
+        <input class="name-input" type="text" maxlength="24" value="Tanque 4" autocomplete="off" aria-label="Nombre del tanque 4">
+        <span class="cap-field">
+          <input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 4 en litros">
+          <span class="cap-suffix">L</span>
+        </span>
+      </div>
+      <div class="pct-row">
+        <input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="91" autocomplete="off" aria-label="Porcentaje actual del tanque 4">
+        <span class="pct-suffix">%</span>
+      </div>
+      <div class="hgauge">
+        <div class="hgauge-marker-label">80%</div>
+        <div class="hgauge-track">
+          <div class="hgauge-fill state-over" style="width:91%"></div>
+          <div class="hgauge-marker"></div>
+        </div>
+        <div class="hgauge-leg leg-a"></div>
+        <div class="hgauge-leg leg-b"></div>
+      </div>
+      <div class="result-chip state-over">
+        <span class="chip-dot"></span>
+        <span class="result-text">Excede el 80% en 11%</span>
+      </div>
+      <div class="order-line state-over">Tenés <span class="order-num">110 L</span> de más sobre el 80%</div>
+    </div>
+  </main>
+
+  <p class="footnote">Tus valores se guardan en este teléfono.</p>
+</div>
+
+<script>
+(function(){
+  const STORAGE_KEY = 'glp-tanks-v1';
+  const DEFAULT_TANKS = [
+    {name:'Tanque 1', pct:55, cap:300},
+    {name:'Tanque 2', pct:72, cap:300},
+    {name:'Tanque 3', pct:80, cap:500},
+    {name:'Tanque 4', pct:91, cap:1000}
+  ];
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      const data = JSON.parse(raw);
+      if(data && Array.isArray(data.tanks) && data.tanks.length===4){
+        data.tanks = data.tanks.map(t=>({cap:null, ...t}));
+        return data;
+      }
+    }catch(e){}
+    return null;
+  }
+  function save(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({tanks, examplesDismissed}));
+    }catch(e){}
+  }
+
+  const loaded = load();
+  let tanks, examplesDismissed;
+  if(loaded){
+    tanks = loaded.tanks;
+    examplesDismissed = !!loaded.examplesDismissed;
+  } else {
+    tanks = DEFAULT_TANKS.map(t=>({...t}));
+    examplesDismissed = false;
+  }
+
+  function clamp(v,min,max){ return Math.min(max, Math.max(min, v)); }
+  function formatNum(n){
+    const r = Math.round(n*10)/10;
+    return Number.isInteger(r) ? String(r) : r.toFixed(1);
+  }
+
+  const banner = document.getElementById('exampleBanner');
+  banner.hidden = examplesDismissed;
+
+  function dismissBanner(){
+    if(!examplesDismissed){
+      examplesDismissed = true;
+      banner.hidden = true;
+    }
+  }
+
+  function updateCard(refs, tank){
+    const pct = tank.pct;
+    if(pct === null || pct === undefined || Number.isNaN(pct)){
+      refs.fill.className = 'hgauge-fill state-idle';
+      refs.fill.style.width = '0%';
+      refs.chip.className = 'result-chip state-idle';
+      refs.text.textContent = 'Ingresá el nivel actual';
+      refs.orderLine.hidden = true;
+      return;
+    }
+    refs.fill.style.width = clamp(pct,0,100) + '%';
+    const diff = pct - 80;
+    let state, text;
+    if(Math.abs(diff) < 0.05){
+      state = 'exact';
+      text = '¡Exacto! Estás en el 80%';
+    } else if(diff > 0){
+      state = 'over';
+      text = `Excede el 80% en ${formatNum(diff)}%`;
+    } else {
+      state = 'below';
+      text = `Faltan ${formatNum(-diff)}% para el 80%`;
+    }
+    refs.fill.className = 'hgauge-fill state-' + state;
+    refs.chip.className = 'result-chip state-' + state;
+    refs.text.textContent = text;
+
+    refs.orderLine.hidden = false;
+    const cap = tank.cap;
+    if(!cap || cap <= 0){
+      refs.orderLine.className = 'order-line state-empty';
+      refs.orderLine.textContent = 'Agregá la capacidad para calcular cuántos litros pedir';
+    } else {
+      const liters = formatNum(Math.abs(diff) * cap / 100);
+      let html;
+      if(state === 'exact'){
+        html = `Ya estás en el punto justo <span class="order-num">(0 L)</span>`;
+      } else if(state === 'over'){
+        html = `Tenés <span class="order-num">${liters} L</span> de más sobre el 80%`;
+      } else {
+        html = `Pedí <span class="order-num">${liters} L</span> al despachador`;
+      }
+      refs.orderLine.className = 'order-line state-' + state;
+      refs.orderLine.innerHTML = html;
+    }
+  }
+
+  function syncRow(entry){
+    entry.nameInput.value = entry.tank.name;
+    entry.capInput.value = entry.tank.cap === null || entry.tank.cap === undefined ? '' : entry.tank.cap;
+    entry.pctInput.value = entry.tank.pct === null || entry.tank.pct === undefined ? '' : entry.tank.pct;
+    updateCard(entry.refs, entry.tank);
+  }
+
+  const rows = Array.from(document.querySelectorAll('.tank-row'));
+  const cardEntries = [];
+
+  rows.forEach((el, index)=>{
+    const tank = tanks[index];
+    const nameInput = el.querySelector('.name-input');
+    const capInput = el.querySelector('.cap-input');
+    const pctInput = el.querySelector('.pct-input');
+    const refs = {
+      fill: el.querySelector('.hgauge-fill'),
+      chip: el.querySelector('.result-chip'),
+      text: el.querySelector('.result-text'),
+      orderLine: el.querySelector('.order-line')
+    };
+    const entry = {tank, nameInput, capInput, pctInput, refs};
+    cardEntries.push(entry);
+
+    syncRow(entry);
+
+    nameInput.addEventListener('input', ()=>{
+      tank.name = nameInput.value;
+      dismissBanner();
+      save();
+    });
+
+    capInput.addEventListener('input', ()=>{
+      const v = capInput.value;
+      tank.cap = v === '' ? null : parseFloat(v);
+      dismissBanner();
+      updateCard(refs, tank);
+      save();
+    });
+
+    capInput.addEventListener('blur', ()=>{
+      if(tank.cap !== null && tank.cap !== undefined && !Number.isNaN(tank.cap)){
+        tank.cap = Math.max(0, tank.cap);
+        capInput.value = formatNum(tank.cap);
+        updateCard(refs, tank);
+        save();
+      }
+    });
+
+    pctInput.addEventListener('input', ()=>{
+      const v = pctInput.value;
+      tank.pct = v === '' ? null : parseFloat(v);
+      dismissBanner();
+      updateCard(refs, tank);
+      save();
+    });
+
+    pctInput.addEventListener('blur', ()=>{
+      if(tank.pct !== null && tank.pct !== undefined && !Number.isNaN(tank.pct)){
+        tank.pct = clamp(tank.pct, 0, 100);
+        pctInput.value = formatNum(tank.pct);
+        updateCard(refs, tank);
+        save();
+      }
+    });
+  });
+
+  window.addEventListener('pageshow', ()=>{
+    cardEntries.forEach(syncRow);
+  });
+})();
+</script>
+</body>
+</html>
