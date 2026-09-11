@@ -315,22 +315,22 @@
     <div class="edit-group">
       <div class="edit-row" data-index="0">
         <input class="name-input" type="text" maxlength="24" value="Tanque 1" autocomplete="off" aria-label="Nombre del tanque 1">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="300" autocomplete="off" aria-label="Capacidad del tanque 1 en litros"><span class="field-suffix">L</span></span>
+        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 1 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="55" autocomplete="off" aria-label="Porcentaje actual del tanque 1"><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="1">
         <input class="name-input" type="text" maxlength="24" value="Tanque 2" autocomplete="off" aria-label="Nombre del tanque 2">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="300" autocomplete="off" aria-label="Capacidad del tanque 2 en litros"><span class="field-suffix">L</span></span>
+        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 2 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="72" autocomplete="off" aria-label="Porcentaje actual del tanque 2"><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="2">
         <input class="name-input" type="text" maxlength="24" value="Tanque 3" autocomplete="off" aria-label="Nombre del tanque 3">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="500" autocomplete="off" aria-label="Capacidad del tanque 3 en litros"><span class="field-suffix">L</span></span>
+        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 3 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="80" autocomplete="off" aria-label="Porcentaje actual del tanque 3"><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="3">
         <input class="name-input" type="text" maxlength="24" value="Tanque 4" autocomplete="off" aria-label="Nombre del tanque 4">
-        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 4 en litros"><span class="field-suffix">L</span></span>
+        <span class="field"><input class="cap-input" type="number" min="0" step="1" inputmode="decimal" value="1000" autocomplete="off" aria-label="Capacidad del tanque 4 en galones"><span class="field-suffix">gal</span></span>
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" value="91" autocomplete="off" aria-label="Porcentaje actual del tanque 4"><span class="field-suffix">%</span></span>
       </div>
     </div>
@@ -350,7 +350,7 @@
         </div>
         <div class="combo-line state-below">
           <span class="chip-dot"></span>
-          <span class="combo-text">Faltan 25% · Pedí 75 L</span>
+          <span class="combo-text">Faltan 25% · Pedí 250 gal</span>
         </div>
       </div>
 
@@ -365,7 +365,7 @@
         </div>
         <div class="combo-line state-below">
           <span class="chip-dot"></span>
-          <span class="combo-text">Faltan 8% · Pedí 24 L</span>
+          <span class="combo-text">Faltan 8% · Pedí 80 gal</span>
         </div>
       </div>
 
@@ -395,7 +395,7 @@
         </div>
         <div class="combo-line state-over">
           <span class="chip-dot"></span>
-          <span class="combo-text">Excede 11% · 110 L de más</span>
+          <span class="combo-text">Excede 11% · 110 gal de más</span>
         </div>
       </div>
     </div>
@@ -408,9 +408,9 @@
 (function(){
   const STORAGE_KEY = 'glp-tanks-v1';
   const DEFAULT_TANKS = [
-    {name:'Tanque 1', pct:55, cap:300},
-    {name:'Tanque 2', pct:72, cap:300},
-    {name:'Tanque 3', pct:80, cap:500},
+    {name:'Tanque 1', pct:55, cap:1000},
+    {name:'Tanque 2', pct:72, cap:1000},
+    {name:'Tanque 3', pct:80, cap:1000},
     {name:'Tanque 4', pct:91, cap:1000}
   ];
 
@@ -483,8 +483,8 @@
     let combo = pctPart;
     const cap = tank.cap;
     if(cap && cap > 0 && state !== 'exact'){
-      const liters = formatNum(Math.abs(diff) * cap / 100);
-      combo += state === 'over' ? ` · ${liters} L de más` : ` · Pedí ${liters} L`;
+      const qty = formatNum(Math.abs(diff) * cap / 100);
+      combo += state === 'over' ? ` · ${qty} gal de más` : ` · Pedí ${qty} gal`;
     }
     refs.fill.className = 'hgauge-fill state-' + state;
     refs.combo.className = 'combo-line state-' + state;
