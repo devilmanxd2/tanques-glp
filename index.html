@@ -628,7 +628,6 @@
             <th>Gasto gal/Tn</th>
             <th>Gasto %/h</th>
             <th>Gasto gal/h</th>
-            <th>Días a 70%/día</th>
           </tr>
         </thead>
         <tbody id="logTableBody"></tbody>
@@ -649,7 +648,6 @@
   const TANK_CAP_GAL = 1000;
   const GAL_PER_TON = 13.135;
   const SHIFT_HOURS = 8;
-  const DAILY_RATE_ASSUMED = 70;
 
   const DEFAULT_TANKS = [
     {name:'Tanque 1', pct:55},
@@ -860,7 +858,6 @@
       const gastoTn = gastoGal / GAL_PER_TON;
       const gastoPctH = gastoPct / SHIFT_HOURS;
       const gastoGalH = gastoGal / SHIFT_HOURS;
-      const diasA70 = e.fin / DAILY_RATE_ASSUMED;
       const posClass = gastoPct > 0 ? ' class="gasto-pos"' : '';
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -873,7 +870,6 @@
         <td>${formatNum(gastoTn)}</td>
         <td>${formatNum(gastoPctH)}</td>
         <td>${formatNum(gastoGalH)}</td>
-        <td>${formatNum(diasA70)}</td>
       `;
       tbody.appendChild(tr);
     }
