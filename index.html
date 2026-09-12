@@ -64,7 +64,7 @@
   .page{
     max-width:520px;
     margin:0 auto;
-    padding:16px 16px 24px;
+    padding:16px 16px 14px;
   }
 
   header.hero{margin-bottom:7px;}
@@ -120,22 +120,16 @@
     color:var(--accent);
     margin:0 0 5px;
   }
-  .section-note{
-    font-size:11px;
-    color:var(--ink-muted);
-    margin:-3px 0 6px;
-  }
   .edit-section{margin-top:9px;}
   .gauge-section{margin-top:11px;}
-  .log-section{margin-top:16px;}
 
-  .edit-group, .tank-group, .log-group{
+  .edit-group, .tank-group{
     background:var(--surface);
     border:1px solid var(--line);
     border-radius:14px;
     box-shadow:0 1px 2px var(--shadow);
+    overflow:hidden;
   }
-  .edit-group, .tank-group{overflow:hidden;}
 
   .edit-header{
     display:flex;
@@ -326,143 +320,8 @@
   .combo-line.state-idle{color:var(--ink-muted);}
   .combo-line.state-idle .chip-dot{background:var(--ink-muted);}
 
-  .log-group{padding:12px;}
-  .turno-picker{
-    display:flex;
-    gap:6px;
-    margin-bottom:8px;
-  }
-  .turno-btn{
-    flex:1;
-    font-family:var(--font-body);
-    font-size:12px;
-    font-weight:600;
-    padding:7px 0;
-    border-radius:8px;
-    border:1px solid var(--line);
-    background:var(--surface-2);
-    color:var(--ink-muted);
-  }
-  .turno-btn.active{
-    background:var(--accent);
-    border-color:var(--accent);
-    color:var(--surface);
-  }
-  .log-row{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:6px 2px;
-    border-top:1px solid var(--line);
-  }
-  .log-row:first-of-type{border-top:none;}
-  .log-tank-name{
-    flex:1;
-    font-family:var(--font-display);
-    font-size:12px;
-    font-weight:600;
-    letter-spacing:.02em;
-    text-transform:uppercase;
-    color:var(--ink);
-    min-width:0;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-  }
-  .log-inicio{
-    flex-shrink:0;
-    font-size:10.5px;
-    color:var(--ink-muted);
-    text-align:right;
-  }
-  .log-inicio b{color:var(--ink); font-family:var(--font-mono); font-weight:600;}
-  .fin-input{width:34px; font-size:14px;}
-  .save-turno-btn{
-    width:100%;
-    margin-top:10px;
-    padding:10px;
-    border-radius:9px;
-    border:none;
-    background:var(--accent);
-    color:var(--surface);
-    font-family:var(--font-body);
-    font-size:13px;
-    font-weight:600;
-  }
-  .save-turno-btn:active{opacity:.85;}
-  .save-msg{
-    text-align:center;
-    font-size:11px;
-    color:var(--safe);
-    margin:6px 0 0;
-    height:14px;
-  }
-
-  .log-history{
-    margin-top:10px;
-    overflow-x:auto;
-    border:1px solid var(--line);
-    border-radius:14px;
-    background:var(--surface);
-  }
-  .log-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:11px;
-  }
-  .log-table th, .log-table td{
-    padding:6px 9px;
-    text-align:right;
-    white-space:nowrap;
-    border-bottom:1px solid var(--line);
-  }
-  .log-table th:first-child, .log-table td:first-child,
-  .log-table th:nth-child(2), .log-table td:nth-child(2){
-    text-align:left;
-  }
-  .log-table thead th{
-    font-size:9px;
-    text-transform:uppercase;
-    letter-spacing:.04em;
-    color:var(--ink-muted);
-    font-weight:600;
-    background:var(--surface-2);
-  }
-  .log-table td{font-family:var(--font-mono);}
-  .log-table td.gasto-pos{color:var(--accent); font-weight:600;}
-  .log-empty{
-    padding:16px;
-    text-align:center;
-    font-size:12px;
-    color:var(--ink-muted);
-  }
-
-  .log-projection{margin-top:10px; display:flex; flex-direction:column; gap:6px;}
-  .proj-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:8px;
-    font-size:12px;
-    padding:9px 12px;
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:10px;
-  }
-  .proj-row .proj-tank{font-weight:600; flex-shrink:0;}
-  .proj-row .proj-value{
-    font-family:var(--font-mono);
-    font-weight:600;
-    color:var(--accent);
-    text-align:right;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-  }
-  .proj-row .proj-value.muted{color:var(--ink-muted); font-family:var(--font-body); font-weight:400;}
-
   .footnote{
-    margin-top:14px;
+    margin-top:8px;
     font-size:10.5px;
     color:var(--ink-muted);
     text-align:center;
@@ -580,75 +439,12 @@
     </div>
   </section>
 
-  <section class="log-section">
-    <p class="section-label">Registro de turnos</p>
-    <p class="section-note">Cargá el % final de cada tanque al cierre del turno. El inicio se completa solo.</p>
-    <div class="log-group">
-      <div class="turno-picker" id="turnoPicker">
-        <button type="button" class="turno-btn" data-turno="Mañana">Mañana</button>
-        <button type="button" class="turno-btn" data-turno="Tarde">Tarde</button>
-        <button type="button" class="turno-btn" data-turno="Noche">Noche</button>
-      </div>
-      <div id="logRows">
-        <div class="log-row" data-index="0">
-          <span class="log-tank-name">Tanque 1</span>
-          <span class="log-inicio">Inicio <b>55</b>%</span>
-          <span class="field"><input class="fin-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" placeholder="—" aria-label="Lectura final del tanque 1"><span class="field-suffix">%</span></span>
-        </div>
-        <div class="log-row" data-index="1">
-          <span class="log-tank-name">Tanque 2</span>
-          <span class="log-inicio">Inicio <b>72</b>%</span>
-          <span class="field"><input class="fin-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" placeholder="—" aria-label="Lectura final del tanque 2"><span class="field-suffix">%</span></span>
-        </div>
-        <div class="log-row" data-index="2">
-          <span class="log-tank-name">Tanque 3</span>
-          <span class="log-inicio">Inicio <b>80</b>%</span>
-          <span class="field"><input class="fin-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" placeholder="—" aria-label="Lectura final del tanque 3"><span class="field-suffix">%</span></span>
-        </div>
-        <div class="log-row" data-index="3">
-          <span class="log-tank-name">Tanque 4</span>
-          <span class="log-inicio">Inicio <b>91</b>%</span>
-          <span class="field"><input class="fin-input" type="number" min="0" max="100" step="0.1" inputmode="decimal" placeholder="—" aria-label="Lectura final del tanque 4"><span class="field-suffix">%</span></span>
-        </div>
-      </div>
-      <button type="button" class="save-turno-btn" id="saveTurnoBtn">Guardar turno</button>
-      <p class="save-msg" id="saveMsg"></p>
-    </div>
-
-    <div class="log-history">
-      <table class="log-table" id="logTable">
-        <thead>
-          <tr>
-            <th>Turno</th>
-            <th>Tanque</th>
-            <th>Inicio %</th>
-            <th>Fin %</th>
-            <th>Gasto %</th>
-            <th>Gasto gal</th>
-            <th>Gasto gal/Tn</th>
-            <th>Gasto %/h</th>
-            <th>Gasto gal/h</th>
-          </tr>
-        </thead>
-        <tbody id="logTableBody"></tbody>
-      </table>
-      <p class="log-empty" id="logEmptyMsg">Todavía no guardaste ningún turno.</p>
-    </div>
-
-    <div class="log-projection" id="logProjection"></div>
-  </section>
-
-  <p class="footnote">Tus valores se guardan en este teléfono. 1 tanque = 1000 gal · 1 Tn ≈ 13.135 gal.</p>
+  <p class="footnote">Tus valores se guardan en este teléfono.</p>
 </div>
 
 <script>
 (function(){
   const STORAGE_KEY = 'glp-tanks-v1';
-  const LOG_KEY = 'glp-shiftlog-v1';
-  const TANK_CAP_GAL = 1000;
-  const GAL_PER_TON = 13.135;
-  const SHIFT_HOURS = 8;
-
   const DEFAULT_TANKS = [
     {name:'Tanque 1', pct:55},
     {name:'Tanque 2', pct:72},
@@ -656,7 +452,7 @@
     {name:'Tanque 4', pct:91}
   ];
 
-  function loadTanks(){
+  function load(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return null;
@@ -665,33 +461,21 @@
     }catch(e){}
     return null;
   }
-  function saveTanks(){
+  function save(){
     try{
       localStorage.setItem(STORAGE_KEY, JSON.stringify({tanks, examplesDismissed}));
     }catch(e){}
   }
-  function loadLog(){
-    try{
-      const raw = localStorage.getItem(LOG_KEY);
-      const data = raw ? JSON.parse(raw) : null;
-      if(Array.isArray(data)) return data;
-    }catch(e){}
-    return [];
-  }
-  function saveLog(){
-    try{ localStorage.setItem(LOG_KEY, JSON.stringify(shiftLog)); }catch(e){}
-  }
 
-  const loadedTanks = loadTanks();
+  const loaded = load();
   let tanks, examplesDismissed;
-  if(loadedTanks){
-    tanks = loadedTanks.tanks;
-    examplesDismissed = !!loadedTanks.examplesDismissed;
+  if(loaded){
+    tanks = loaded.tanks;
+    examplesDismissed = !!loaded.examplesDismissed;
   } else {
     tanks = DEFAULT_TANKS.map(t=>({...t}));
     examplesDismissed = false;
   }
-  let shiftLog = loadLog();
 
   function clamp(v,min,max){ return Math.min(max, Math.max(min, v)); }
   function formatNum(n){
@@ -772,9 +556,8 @@
     nameInput.addEventListener('input', ()=>{
       tank.name = nameInput.value;
       nameDisplay.textContent = tank.name;
-      logNameEls[index].textContent = tank.name;
       dismissBanner();
-      saveTanks();
+      save();
     });
 
     pctInput.addEventListener('input', ()=>{
@@ -782,7 +565,7 @@
       tank.pct = v === '' ? null : parseFloat(v);
       dismissBanner();
       updateCard(refs, tank);
-      saveTanks();
+      save();
     });
 
     pctInput.addEventListener('blur', ()=>{
@@ -790,167 +573,14 @@
         tank.pct = clamp(tank.pct, 0, 100);
         pctInput.value = formatNum(tank.pct);
         updateCard(refs, tank);
-        saveTanks();
+        save();
       }
     });
   });
 
   window.addEventListener('pageshow', ()=>{
     cardEntries.forEach(syncRow);
-    refreshLogInicios();
-    renderHistory();
-    renderProjections();
   });
-
-  // --- Registro de turnos ---
-  let selectedTurno = 'Mañana';
-  const turnoButtons = Array.from(document.querySelectorAll('.turno-btn'));
-  turnoButtons.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      selectedTurno = btn.dataset.turno;
-      turnoButtons.forEach(b=>b.classList.toggle('active', b===btn));
-    });
-  });
-  turnoButtons[0].classList.add('active');
-
-  const logRowEls = Array.from(document.querySelectorAll('.log-row'));
-  const logNameEls = logRowEls.map(r=>r.querySelector('.log-tank-name'));
-  const logInicioEls = logRowEls.map(r=>r.querySelector('.log-inicio b'));
-  const logFinInputs = logRowEls.map(r=>r.querySelector('.fin-input'));
-
-  function lastFinFor(tankIndex){
-    for(let i=shiftLog.length-1;i>=0;i--){
-      if(shiftLog[i].tankIndex===tankIndex) return shiftLog[i].fin;
-    }
-    return null;
-  }
-
-  function currentInicio(tankIndex){
-    const prev = lastFinFor(tankIndex);
-    if(prev!==null) return prev;
-    const p = tanks[tankIndex].pct;
-    return (p===null||p===undefined||Number.isNaN(p)) ? 0 : p;
-  }
-
-  function refreshLogInicios(){
-    logInicioEls.forEach((el,i)=>{ el.textContent = formatNum(currentInicio(i)); });
-  }
-  refreshLogInicios();
-
-  function renderHistory(){
-    const tbody = document.getElementById('logTableBody');
-    const emptyMsg = document.getElementById('logEmptyMsg');
-    const historyBox = document.querySelector('.log-history');
-    tbody.innerHTML = '';
-    if(shiftLog.length===0){
-      historyBox.querySelector('table').style.display = 'none';
-      emptyMsg.style.display = 'block';
-      return;
-    }
-    historyBox.querySelector('table').style.display = 'table';
-    emptyMsg.style.display = 'none';
-
-    const start = Math.max(0, shiftLog.length - 30);
-    for(let i=shiftLog.length-1; i>=start; i--){
-      const e = shiftLog[i];
-      const gastoPct = e.inicio - e.fin;
-      const gastoGal = gastoPct * TANK_CAP_GAL / 100;
-      const gastoTn = gastoGal / GAL_PER_TON;
-      const gastoPctH = gastoPct / SHIFT_HOURS;
-      const gastoGalH = gastoGal / SHIFT_HOURS;
-      const posClass = gastoPct > 0 ? ' class="gasto-pos"' : '';
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${e.turno}</td>
-        <td>${tanks[e.tankIndex] ? tanks[e.tankIndex].name : 'Tanque ' + (e.tankIndex+1)}</td>
-        <td>${formatNum(e.inicio)}%</td>
-        <td>${formatNum(e.fin)}%</td>
-        <td${posClass}>${formatNum(gastoPct)}%</td>
-        <td${posClass}>${formatNum(gastoGal)}</td>
-        <td>${formatNum(gastoTn)}</td>
-        <td>${formatNum(gastoPctH)}</td>
-        <td>${formatNum(gastoGalH)}</td>
-      `;
-      tbody.appendChild(tr);
-    }
-  }
-
-  function renderProjections(){
-    const box = document.getElementById('logProjection');
-    box.innerHTML = '';
-    tanks.forEach((tank, i)=>{
-      const entries = shiftLog.filter(e=>e.tankIndex===i);
-      const row = document.createElement('div');
-      row.className = 'proj-row';
-      const name = document.createElement('span');
-      name.className = 'proj-tank';
-      name.textContent = tank.name;
-      const value = document.createElement('span');
-      value.className = 'proj-value';
-
-      if(entries.length===0){
-        value.classList.add('muted');
-        value.textContent = 'Sin turnos registrados';
-      } else {
-        const first = entries[0].inicio;
-        const last = entries[entries.length-1].fin;
-        const totalHours = entries.length * SHIFT_HOURS;
-        const rate = (first - last) / totalHours;
-        if(rate <= 0){
-          value.classList.add('muted');
-          value.textContent = 'Sin consumo registrado';
-        } else {
-          const hoursToEmpty = last / rate;
-          if(hoursToEmpty >= 24){
-            value.textContent = `Vacío en ~${formatNum(hoursToEmpty/24)} días`;
-          } else {
-            value.textContent = `Vacío en ~${formatNum(hoursToEmpty)} h`;
-          }
-        }
-      }
-      row.appendChild(name);
-      row.appendChild(value);
-      box.appendChild(row);
-    });
-  }
-
-  const saveMsg = document.getElementById('saveMsg');
-  let saveMsgTimer = null;
-
-  document.getElementById('saveTurnoBtn').addEventListener('click', ()=>{
-    let savedAny = false;
-    logFinInputs.forEach((input, i)=>{
-      const v = input.value;
-      if(v === '') return;
-      const fin = clamp(parseFloat(v), 0, 100);
-      if(Number.isNaN(fin)) return;
-      const inicio = currentInicio(i);
-      shiftLog.push({turno:selectedTurno, tankIndex:i, inicio, fin});
-      tanks[i].pct = fin;
-      input.value = '';
-      savedAny = true;
-    });
-
-    if(!savedAny){
-      saveMsg.style.color = 'var(--over)';
-      saveMsg.textContent = 'Cargá al menos un tanque.';
-    } else {
-      saveMsg.style.color = 'var(--safe)';
-      saveMsg.textContent = 'Turno guardado.';
-      saveLog();
-      saveTanks();
-      dismissBanner();
-      cardEntries.forEach(syncRow);
-      refreshLogInicios();
-      renderHistory();
-      renderProjections();
-    }
-    clearTimeout(saveMsgTimer);
-    saveMsgTimer = setTimeout(()=>{ saveMsg.textContent=''; }, 2500);
-  });
-
-  renderHistory();
-  renderProjections();
 })();
 </script>
 </body>
