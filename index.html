@@ -578,6 +578,7 @@
       refs.comboText.textContent = 'Ingresá el nivel actual';
       refs.pedirBox.className = 'field result-field state-idle';
       refs.pedirValue.textContent = '–';
+      refs.pedirSuffix.textContent = '%';
       return;
     }
     refs.fill.style.width = clamp(pct,0,100) + '%';
@@ -598,6 +599,7 @@
     refs.comboText.textContent = text;
     refs.pedirBox.className = 'field result-field state-' + state;
     refs.pedirValue.textContent = formatNum(Math.abs(diff));
+    refs.pedirSuffix.textContent = '%';
   }
 
   function syncRow(entry){
@@ -622,7 +624,8 @@
       combo: gaugeEl.querySelector('.combo-line'),
       comboText: gaugeEl.querySelector('.combo-text'),
       pedirBox: editEl.querySelector('.result-field'),
-      pedirValue: editEl.querySelector('.pedir-value')
+      pedirValue: editEl.querySelector('.pedir-value'),
+      pedirSuffix: editEl.querySelector('.result-field .field-suffix')
     };
     const entry = {tank, nameInput, pctInput, nameDisplay, refs};
     cardEntries.push(entry);
@@ -724,6 +727,11 @@
       line.textContent = allocated[i] > 0.05
         ? `Reparto: +${formatNum(allocated[i])} gal → ${formatNum(endPct)}%`
         : 'Reparto: sin cambios';
+
+      const pedirRefs = cardEntries[i].refs;
+      pedirRefs.pedirBox.className = 'field result-field state-' + state;
+      pedirRefs.pedirValue.textContent = formatNum(allocated[i]);
+      pedirRefs.pedirSuffix.textContent = 'gal';
     });
 
     distNote.hidden = false;
