@@ -320,6 +320,110 @@
   .combo-line.state-idle{color:var(--ink-muted);}
   .combo-line.state-idle .chip-dot{background:var(--ink-muted);}
 
+  .section-note{
+    font-size:11px;
+    color:var(--ink-muted);
+    margin:-3px 0 6px;
+  }
+  .dist-section{margin-top:11px;}
+  .dist-group{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 1px 2px var(--shadow);
+    padding:12px;
+  }
+  .dist-input-row{
+    display:flex;
+    gap:8px;
+  }
+  .dist-field{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 10px;
+    min-width:0;
+  }
+  .dist-field:focus-within{border-color:var(--accent);}
+  .dist-input{
+    flex:1;
+    min-width:0;
+    width:0;
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:17px;
+    color:var(--ink);
+    background:transparent;
+    border:none;
+    padding:0;
+  }
+  .dist-input::-webkit-outer-spin-button, .dist-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .dist-input{-moz-appearance:textfield;}
+  .dist-input:focus{outline:none;}
+  .dist-btn{
+    flex-shrink:0;
+    padding:0 18px;
+    border-radius:9px;
+    border:none;
+    background:var(--accent);
+    color:var(--surface);
+    font-family:var(--font-body);
+    font-size:13px;
+    font-weight:600;
+  }
+  .dist-btn:active{opacity:.85;}
+  .dist-results{margin-top:10px; display:flex; flex-direction:column; gap:6px;}
+  .dist-results[hidden]{display:none;}
+  .dist-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 12px;
+    background:var(--surface-2);
+    border-radius:10px;
+  }
+  .dist-name{
+    flex:1;
+    min-width:0;
+    font-family:var(--font-display);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    color:var(--ink);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .dist-change{
+    flex-shrink:0;
+    font-size:11px;
+    color:var(--ink-muted);
+  }
+  .dist-gal{
+    flex-shrink:0;
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:14px;
+    text-align:right;
+    min-width:64px;
+    color:var(--ink-muted);
+  }
+  .dist-row.state-below .dist-gal{color:var(--accent);}
+  .dist-row.state-exact .dist-gal{color:var(--safe);}
+  .dist-row.state-over .dist-gal{color:var(--over);}
+  .dist-note{
+    margin:8px 0 0;
+    font-size:11.5px;
+    color:var(--ink-muted);
+    text-align:center;
+  }
+  .dist-note.warn{color:var(--over); font-weight:600;}
+
   .footnote{
     margin-top:8px;
     font-size:10.5px;
@@ -439,7 +543,25 @@
     </div>
   </section>
 
-  <p class="footnote">Tus valores se guardan en este teléfono.</p>
+  <section class="dist-section">
+    <p class="section-label">Reparto de galones</p>
+    <p class="section-note">Ingresá cuánto trae el camión y lo repartimos entre los 4 tanques.</p>
+    <div class="dist-group">
+      <div class="dist-input-row">
+        <span class="dist-field"><input class="dist-input" type="number" min="0" step="1" inputmode="decimal" placeholder="0" aria-label="Galones a repartir"><span class="field-suffix">gal</span></span>
+        <button type="button" class="dist-btn" id="distBtn">Repartir</button>
+      </div>
+      <div class="dist-results" id="distResults" hidden>
+        <div class="dist-row" data-index="0"><span class="dist-name">Tanque 1</span><span class="dist-change"></span><span class="dist-gal"></span></div>
+        <div class="dist-row" data-index="1"><span class="dist-name">Tanque 2</span><span class="dist-change"></span><span class="dist-gal"></span></div>
+        <div class="dist-row" data-index="2"><span class="dist-name">Tanque 3</span><span class="dist-change"></span><span class="dist-gal"></span></div>
+        <div class="dist-row" data-index="3"><span class="dist-name">Tanque 4</span><span class="dist-change"></span><span class="dist-gal"></span></div>
+      </div>
+      <p class="dist-note" id="distNote"></p>
+    </div>
+  </section>
+
+  <p class="footnote">Tus valores se guardan en este teléfono. 1 tanque = 1000 gal.</p>
 </div>
 
 <script>
@@ -580,6 +702,90 @@
 
   window.addEventListener('pageshow', ()=>{
     cardEntries.forEach(syncRow);
+  });
+
+  // --- Reparto de galones ---
+  const TANK_CAP_GAL = 1000;
+  const distInput = document.querySelector('.dist-input');
+  const distBtn = document.getElementById('distBtn');
+  const distResults = document.getElementById('distResults');
+  const distRows = Array.from(document.querySelectorAll('.dist-row'));
+  const distNote = document.getElementById('distNote');
+
+  function tankGal(tank){
+    const p = tank.pct;
+    const pct = (p===null||p===undefined||Number.isNaN(p)) ? 0 : clamp(p,0,100);
+    return pct * TANK_CAP_GAL / 100;
+  }
+
+  function distribute(totalSupply){
+    const currentGal = tanks.map(tankGal);
+    const needGal = currentGal.map(g => Math.max(0, 800 - g));
+    const totalNeed = needGal.reduce((a,b)=>a+b, 0);
+
+    let allocated = [0,0,0,0];
+    let remaining = totalSupply;
+
+    if(totalNeed > 0){
+      if(totalSupply <= totalNeed){
+        allocated = needGal.map(n => n / totalNeed * totalSupply);
+        remaining = 0;
+      } else {
+        allocated = needGal.slice();
+        remaining = totalSupply - totalNeed;
+      }
+    }
+
+    let unassigned = 0;
+    if(remaining > 0){
+      const share = remaining / 4;
+      const room = currentGal.map((g,i) => Math.max(0, TANK_CAP_GAL - (g + allocated[i])));
+      let used = 0;
+      for(let i=0;i<4;i++){
+        const give = Math.min(share, room[i]);
+        allocated[i] += give;
+        used += give;
+      }
+      unassigned = remaining - used;
+    }
+
+    return {allocated, currentGal, unassigned};
+  }
+
+  function renderDistribution(totalSupply){
+    const {allocated, currentGal, unassigned} = distribute(totalSupply);
+    distResults.hidden = false;
+
+    tanks.forEach((tank, i)=>{
+      const row = distRows[i];
+      const startPct = currentGal[i] / TANK_CAP_GAL * 100;
+      const endPct = (currentGal[i] + allocated[i]) / TANK_CAP_GAL * 100;
+      const diff = endPct - 80;
+      const state = Math.abs(diff) < 0.05 ? 'exact' : (diff > 0 ? 'over' : 'below');
+      row.className = 'dist-row state-' + state;
+      row.querySelector('.dist-name').textContent = tank.name;
+      row.querySelector('.dist-change').textContent = `${formatNum(startPct)}% → ${formatNum(endPct)}%`;
+      row.querySelector('.dist-gal').textContent = allocated[i] > 0.05 ? `+${formatNum(allocated[i])} gal` : '—';
+    });
+
+    if(unassigned > 0.5){
+      distNote.className = 'dist-note warn';
+      distNote.textContent = `Sobran ${formatNum(unassigned)} gal sin asignar: los tanques llegaron a su tope de 100%.`;
+    } else {
+      distNote.className = 'dist-note';
+      distNote.textContent = `Reparto completo: se asignaron los ${formatNum(totalSupply)} gal.`;
+    }
+  }
+
+  distBtn.addEventListener('click', ()=>{
+    const total = parseFloat(distInput.value);
+    if(distInput.value === '' || Number.isNaN(total) || total <= 0){
+      distResults.hidden = true;
+      distNote.className = 'dist-note warn';
+      distNote.textContent = 'Ingresá cuántos galones trae el camión.';
+      return;
+    }
+    renderDistribution(total);
   });
 })();
 </script>
