@@ -730,8 +730,8 @@
 
       const pedirRefs = cardEntries[i].refs;
       pedirRefs.pedirBox.className = 'field result-field state-' + state;
-      pedirRefs.pedirValue.textContent = formatNum(allocated[i]);
-      pedirRefs.pedirSuffix.textContent = 'gal';
+      pedirRefs.pedirValue.textContent = formatNum(allocated[i] / TANK_CAP_GAL * 100);
+      pedirRefs.pedirSuffix.textContent = '%';
     });
 
     distNote.hidden = false;
