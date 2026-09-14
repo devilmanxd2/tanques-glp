@@ -724,12 +724,7 @@
       line.textContent = allocated[i] > 0.05
         ? `Reparto: +${formatNum(allocated[i])} gal → ${formatNum(endPct)}%`
         : 'Reparto: sin cambios';
-
-      tank.pct = Math.round(clamp(endPct, 0, 100));
-      syncRow(cardEntries[i]);
     });
-    dismissBanner();
-    save();
 
     distNote.hidden = false;
     if(unassigned > 0.5){
