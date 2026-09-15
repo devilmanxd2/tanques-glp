@@ -680,30 +680,33 @@
     return pct * TANK_CAP_GAL / 100;
   }
 
+  function waterFill(levels, supply, targetGal){
+    const allocated = levels.map(()=>0);
+    let remaining = supply;
+    let active = levels.map((_,i)=>i).filter(i => targetGal - levels[i] > 1e-6);
+
+    while(remaining > 1e-6 && active.length > 0){
+      const rooms = active.map(i => targetGal - (levels[i] + allocated[i]));
+      const minRoom = Math.min(...rooms);
+      const share = remaining / active.length;
+      const step = Math.min(share, minRoom);
+      active.forEach(i => { allocated[i] += step; });
+      remaining -= step * active.length;
+      active = active.filter(i => targetGal - (levels[i] + allocated[i]) > 1e-6);
+    }
+
+    return {allocated, remaining};
+  }
+
   function distribute(totalSupply){
     const currentGal = tanks.map(tankGal);
-    let allocated = [0,0,0,0];
-    let remaining = totalSupply;
 
-    for(let i=0;i<4 && remaining>0;i++){
-      const need = Math.max(0, 800 - currentGal[i]);
-      const give = Math.min(need, remaining);
-      allocated[i] += give;
-      remaining -= give;
-    }
+    const phase1 = waterFill(currentGal, totalSupply, 800);
+    const afterPhase1 = currentGal.map((g,i) => g + phase1.allocated[i]);
+    const phase2 = waterFill(afterPhase1, phase1.remaining, SURPLUS_CAP_GAL);
 
-    let unassigned = 0;
-    if(remaining > 0){
-      const share = remaining / 4;
-      const room = currentGal.map((g,i) => Math.max(0, SURPLUS_CAP_GAL - (g + allocated[i])));
-      let used = 0;
-      for(let i=0;i<4;i++){
-        const give = Math.min(share, room[i]);
-        allocated[i] += give;
-        used += give;
-      }
-      unassigned = remaining - used;
-    }
+    const allocated = phase1.allocated.map((a,i) => a + phase2.allocated[i]);
+    const unassigned = phase2.remaining;
 
     return {allocated, currentGal, unassigned};
   }
