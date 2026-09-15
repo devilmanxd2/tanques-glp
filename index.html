@@ -557,7 +557,8 @@
 
   function clamp(v,min,max){ return Math.min(max, Math.max(min, v)); }
   function formatNum(n){
-    return String(Math.round(n));
+    const r = Math.round(n*10)/10;
+    return Number.isInteger(r) ? String(r) : r.toFixed(1);
   }
 
   const banner = document.getElementById('exampleBanner');
