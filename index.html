@@ -557,8 +557,21 @@
 
   function clamp(v,min,max){ return Math.min(max, Math.max(min, v)); }
   function formatNum(n){
-    const r = Math.round(n*10)/10;
-    return Number.isInteger(r) ? String(r) : r.toFixed(1);
+    return String(Math.round(n));
+  }
+
+  function apportionInts(values){
+    const floors = values.map(v => Math.floor(v));
+    const target = Math.round(values.reduce((a,b)=>a+b, 0));
+    const remainder = target - floors.reduce((a,b)=>a+b, 0);
+    const order = values
+      .map((v,i)=>({i, frac: v - Math.floor(v)}))
+      .sort((a,b)=>b.frac - a.frac);
+    const result = floors.slice();
+    for(let k=0; k<remainder && k<order.length; k++){
+      result[order[k].i] += 1;
+    }
+    return result;
   }
 
   const banner = document.getElementById('exampleBanner');
@@ -714,22 +727,24 @@
 
   function renderDistribution(totalSupply){
     const {allocated, currentGal, unassigned} = distribute(totalSupply);
+    const pedirPct = apportionInts(allocated.map(a => a / TANK_CAP_GAL * 100));
 
     tanks.forEach((tank, i)=>{
       const line = distLines[i];
-      const startPct = currentGal[i] / TANK_CAP_GAL * 100;
-      const endPct = (currentGal[i] + allocated[i]) / TANK_CAP_GAL * 100;
+      const addedPct = pedirPct[i];
+      const addedGal = addedPct * 10;
+      const endPct = tank.pct + addedPct;
       const diff = endPct - 80;
-      const state = Math.abs(diff) < 0.05 ? 'exact' : (diff > 0 ? 'over' : 'below');
+      const state = diff === 0 ? 'exact' : (diff > 0 ? 'over' : 'below');
       line.className = 'dist-line state-' + state;
       line.hidden = false;
-      line.textContent = allocated[i] > 0.05
-        ? `Reparto: +${formatNum(allocated[i])} gal → ${formatNum(endPct)}%`
+      line.textContent = addedGal > 0
+        ? `Reparto: +${addedGal} gal → ${endPct}%`
         : 'Reparto: sin cambios';
 
       const pedirRefs = cardEntries[i].refs;
       pedirRefs.pedirBox.className = 'field result-field state-' + state;
-      pedirRefs.pedirValue.textContent = formatNum(allocated[i] / TANK_CAP_GAL * 100);
+      pedirRefs.pedirValue.textContent = String(addedPct);
       pedirRefs.pedirSuffix.textContent = '%';
     });
 
