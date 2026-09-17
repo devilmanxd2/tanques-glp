@@ -268,7 +268,7 @@
     border-radius:4px;
   }
 
-  .pedir-value{
+  .pedir-value, .total-value{
     font-family:var(--font-mono);
     font-weight:600;
     font-size:15px;
@@ -276,11 +276,11 @@
     color:var(--ink-muted);
   }
   .result-field.state-below{border-color:var(--accent);}
-  .result-field.state-below .pedir-value{color:var(--accent);}
+  .result-field.state-below .pedir-value, .result-field.state-below .total-value{color:var(--accent);}
   .result-field.state-exact{border-color:var(--safe);}
-  .result-field.state-exact .pedir-value{color:var(--safe);}
+  .result-field.state-exact .pedir-value, .result-field.state-exact .total-value{color:var(--safe);}
   .result-field.state-over{border-color:var(--over);}
-  .result-field.state-over .pedir-value{color:var(--over);}
+  .result-field.state-over .pedir-value, .result-field.state-over .total-value{color:var(--over);}
 
   .tank-row{
     padding:8px 12px;
@@ -422,26 +422,31 @@
         <span class="edit-header-spacer"></span>
         <span class="edit-header-label">Real</span>
         <span class="edit-header-label">Pedir</span>
+        <span class="edit-header-label">Total</span>
       </div>
       <div class="edit-row" data-index="0">
         <input class="name-input" type="text" maxlength="24" value="Tanque 1" autocomplete="off" aria-label="Nombre del tanque 1">
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="1" inputmode="decimal" value="55" autocomplete="off" aria-label="Porcentaje actual del tanque 1"><span class="field-suffix">%</span></span>
         <span class="field result-field state-below"><span class="pedir-value">25</span><span class="field-suffix">%</span></span>
+        <span class="field result-field state-below"><span class="total-value">80</span><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="1">
         <input class="name-input" type="text" maxlength="24" value="Tanque 2" autocomplete="off" aria-label="Nombre del tanque 2">
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="1" inputmode="decimal" value="72" autocomplete="off" aria-label="Porcentaje actual del tanque 2"><span class="field-suffix">%</span></span>
         <span class="field result-field state-below"><span class="pedir-value">8</span><span class="field-suffix">%</span></span>
+        <span class="field result-field state-below"><span class="total-value">80</span><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="2">
         <input class="name-input" type="text" maxlength="24" value="Tanque 3" autocomplete="off" aria-label="Nombre del tanque 3">
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="1" inputmode="decimal" value="80" autocomplete="off" aria-label="Porcentaje actual del tanque 3"><span class="field-suffix">%</span></span>
         <span class="field result-field state-exact"><span class="pedir-value">0</span><span class="field-suffix">%</span></span>
+        <span class="field result-field state-exact"><span class="total-value">80</span><span class="field-suffix">%</span></span>
       </div>
       <div class="edit-row" data-index="3">
         <input class="name-input" type="text" maxlength="24" value="Tanque 4" autocomplete="off" aria-label="Nombre del tanque 4">
         <span class="field"><input class="pct-input" type="number" min="0" max="100" step="1" inputmode="decimal" value="91" autocomplete="off" aria-label="Porcentaje actual del tanque 4"><span class="field-suffix">%</span></span>
-        <span class="field result-field state-over"><span class="pedir-value">-11</span><span class="field-suffix">%</span></span>
+        <span class="field result-field state-over"><span class="pedir-value">11</span><span class="field-suffix">%</span></span>
+        <span class="field result-field state-over"><span class="total-value">102</span><span class="field-suffix">%</span></span>
       </div>
     </div>
   </section>
@@ -594,6 +599,8 @@
       refs.pedirBox.className = 'field result-field state-idle';
       refs.pedirValue.textContent = '–';
       refs.pedirSuffix.textContent = '%';
+      refs.totalBox.className = 'field result-field state-idle';
+      refs.totalValue.textContent = '–';
       return;
     }
     refs.fill.style.width = clamp(pct,0,100) + '%';
@@ -615,6 +622,8 @@
     refs.pedirBox.className = 'field result-field state-' + state;
     refs.pedirValue.textContent = formatNum(Math.abs(diff));
     refs.pedirSuffix.textContent = '%';
+    refs.totalBox.className = 'field result-field state-' + state;
+    refs.totalValue.textContent = formatNum(pct + Math.abs(diff));
   }
 
   function syncRow(entry){
@@ -638,9 +647,11 @@
       fill: gaugeEl.querySelector('.hgauge-fill'),
       combo: gaugeEl.querySelector('.combo-line'),
       comboText: gaugeEl.querySelector('.combo-text'),
-      pedirBox: editEl.querySelector('.result-field'),
+      pedirBox: editEl.querySelectorAll('.result-field')[0],
       pedirValue: editEl.querySelector('.pedir-value'),
-      pedirSuffix: editEl.querySelector('.result-field .field-suffix')
+      pedirSuffix: editEl.querySelectorAll('.result-field .field-suffix')[0],
+      totalBox: editEl.querySelectorAll('.result-field')[1],
+      totalValue: editEl.querySelector('.total-value')
     };
     const entry = {tank, nameInput, pctInput, nameDisplay, refs};
     cardEntries.push(entry);
@@ -746,6 +757,8 @@
       pedirRefs.pedirBox.className = 'field result-field state-' + state;
       pedirRefs.pedirValue.textContent = String(addedPct);
       pedirRefs.pedirSuffix.textContent = '%';
+      pedirRefs.totalBox.className = 'field result-field state-' + state;
+      pedirRefs.totalValue.textContent = String(endPct);
     });
 
     distNote.hidden = false;
