@@ -383,6 +383,82 @@
   .dist-line.state-exact{color:var(--safe);}
   .dist-line.state-over{color:var(--over);}
 
+  .pred-section{margin-top:11px;}
+  .pred-group{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 1px 2px var(--shadow);
+    overflow:hidden;
+  }
+  .pred-params{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    padding:10px 12px;
+  }
+  .pred-param{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .pred-param-label{
+    font-size:9px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+  .pred-param .field{width:100%;justify-content:flex-end;}
+  .pred-input{
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:15px;
+    color:var(--ink);
+    background:transparent;
+    border:none;
+    text-align:right;
+    padding:0;
+    width:100%;
+    min-width:0;
+  }
+  .pred-input::-webkit-outer-spin-button, .pred-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .pred-input{-moz-appearance:textfield;}
+  .pred-input:focus{outline:none;}
+  .pred-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:9px 12px;
+    border-top:1px solid var(--line);
+  }
+  .pred-text{min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .pred-name{
+    font-family:var(--font-display);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    color:var(--ink);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .pred-sub{font-size:10.5px;color:var(--ink-muted);}
+  .pred-main{
+    flex-shrink:0;
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:13px;
+    text-align:right;
+    color:var(--accent);
+  }
+  .pred-main.state-soon{color:var(--over);}
+  .pred-main.state-idle{color:var(--ink-muted);}
+
   .footnote{
     margin-top:14px;
     font-size:10.5px;
@@ -520,6 +596,30 @@
     </div>
   </section>
 
+  <section class="pred-section">
+    <p class="section-label">Predicción de pedido</p>
+    <div class="pred-group">
+      <div class="pred-params">
+        <label class="pred-param">
+          <span class="pred-param-label">Consumo por turno</span>
+          <span class="field"><input class="pred-input" id="predConsumo" type="number" min="1" max="100" step="1" inputmode="decimal" value="25" autocomplete="off" aria-label="Porcentaje que se consume por turno"><span class="field-suffix">%</span></span>
+        </label>
+        <label class="pred-param">
+          <span class="pred-param-label">Turnos por día</span>
+          <span class="field"><input class="pred-input" id="predTurnos" type="number" min="1" max="6" step="1" inputmode="decimal" value="3" autocomplete="off" aria-label="Cantidad de turnos por día"></span>
+        </label>
+        <label class="pred-param">
+          <span class="pred-param-label">Pedir al llegar a</span>
+          <span class="field"><input class="pred-input" id="predUmbral" type="number" min="0" max="79" step="1" inputmode="decimal" value="20" autocomplete="off" aria-label="Nivel al que conviene pedir"><span class="field-suffix">%</span></span>
+        </label>
+      </div>
+      <div class="pred-row"><div class="pred-text"><span class="pred-name">Tanque 1</span><span class="pred-sub">≈ 0.5 días · se vacía en 2.2 turnos</span></div><span class="pred-main state-soon">Pedir en 1.4 turnos</span></div>
+      <div class="pred-row"><div class="pred-text"><span class="pred-name">Tanque 2</span><span class="pred-sub">≈ 0.7 días · se vacía en 2.9 turnos</span></div><span class="pred-main state-soon">Pedir en 2.1 turnos</span></div>
+      <div class="pred-row"><div class="pred-text"><span class="pred-name">Tanque 3</span><span class="pred-sub">≈ 0.8 días · se vacía en 3.2 turnos</span></div><span class="pred-main state-soon">Pedir en 2.4 turnos</span></div>
+      <div class="pred-row"><div class="pred-text"><span class="pred-name">Tanque 4</span><span class="pred-sub">≈ 0.9 días · se vacía en 3.6 turnos</span></div><span class="pred-main state-soon">Pedir en 2.8 turnos</span></div>
+    </div>
+  </section>
+
   <p class="footnote">Tus valores se guardan en este teléfono. 1 tanque = 1000 gal.</p>
 </div>
 
@@ -546,18 +646,21 @@
   }
   function save(){
     try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({tanks, examplesDismissed}));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({tanks, examplesDismissed, settings}));
     }catch(e){}
   }
 
+  const DEFAULT_SETTINGS = {consumo:25, turnos:3, umbral:20};
   const loaded = load();
-  let tanks, examplesDismissed;
+  let tanks, examplesDismissed, settings;
   if(loaded){
     tanks = loaded.tanks;
     examplesDismissed = !!loaded.examplesDismissed;
+    settings = Object.assign({}, DEFAULT_SETTINGS, loaded.settings);
   } else {
     tanks = DEFAULT_TANKS.map(t=>({...t}));
     examplesDismissed = false;
+    settings = Object.assign({}, DEFAULT_SETTINGS);
   }
 
   function clamp(v,min,max){ return Math.min(max, Math.max(min, v)); }
@@ -601,6 +704,7 @@
       refs.pedirSuffix.textContent = '%';
       refs.totalBox.className = 'field result-field state-idle';
       refs.totalValue.textContent = '–';
+      renderPrediction();
       return;
     }
     refs.fill.style.width = clamp(pct,0,100) + '%';
@@ -624,6 +728,7 @@
     refs.pedirSuffix.textContent = '%';
     refs.totalBox.className = 'field result-field state-' + state;
     refs.totalValue.textContent = formatNum(pct + Math.abs(diff));
+    renderPrediction();
   }
 
   function syncRow(entry){
@@ -636,6 +741,64 @@
   const editRows = Array.from(document.querySelectorAll('.edit-row'));
   const gaugeRows = Array.from(document.querySelectorAll('.tank-row'));
   const cardEntries = [];
+
+  // --- Predicción de pedido ---
+  const predInputs = {
+    consumo: document.getElementById('predConsumo'),
+    turnos: document.getElementById('predTurnos'),
+    umbral: document.getElementById('predUmbral')
+  };
+  const predRows = Array.from(document.querySelectorAll('.pred-row')).map(row => ({
+    name: row.querySelector('.pred-name'),
+    sub: row.querySelector('.pred-sub'),
+    main: row.querySelector('.pred-main')
+  }));
+
+  function fmt1(n){
+    const r = Math.round(n*10)/10;
+    return Number.isInteger(r) ? String(r) : r.toFixed(1);
+  }
+  function unit(n, one, many){ return Math.round(n*10)/10 === 1 ? one : many; }
+
+  function renderPrediction(){
+    const {consumo, turnos, umbral} = settings;
+    const valid = consumo > 0 && turnos > 0 && umbral !== null && umbral >= 0;
+    tanks.forEach((tank, i)=>{
+      const r = predRows[i];
+      r.name.textContent = tank.name;
+      const pct = tank.pct;
+      if(!valid || pct === null || pct === undefined || Number.isNaN(pct)){
+        r.main.className = 'pred-main state-idle';
+        r.main.textContent = '–';
+        r.sub.textContent = valid ? 'Ingresá el nivel actual' : 'Completá los datos de arriba';
+        return;
+      }
+      const toOrder = (pct - umbral) / consumo;
+      const toEmpty = pct / consumo;
+      const emptyText = `se vacía en ${fmt1(toEmpty)} ${unit(toEmpty, 'turno', 'turnos')}`;
+      if(toOrder <= 0){
+        r.main.className = 'pred-main state-soon';
+        r.main.textContent = 'Pedir ya';
+        r.sub.textContent = `Está en ${formatNum(pct)}% · ${emptyText}`;
+      } else {
+        r.main.className = 'pred-main' + (toOrder <= turnos ? ' state-soon' : '');
+        r.main.textContent = `Pedir en ${fmt1(toOrder)} ${unit(toOrder, 'turno', 'turnos')}`;
+        r.sub.textContent = `≈ ${fmt1(toOrder / turnos)} ${unit(toOrder / turnos, 'día', 'días')} · ${emptyText}`;
+      }
+    });
+  }
+
+  predInputs.consumo.value = settings.consumo === null ? '' : settings.consumo;
+  predInputs.turnos.value = settings.turnos === null ? '' : settings.turnos;
+  predInputs.umbral.value = settings.umbral === null ? '' : settings.umbral;
+  Object.keys(predInputs).forEach(key => {
+    predInputs[key].addEventListener('input', ()=>{
+      const v = parseFloat(predInputs[key].value);
+      settings[key] = Number.isNaN(v) ? null : v;
+      save();
+      renderPrediction();
+    });
+  });
 
   editRows.forEach((editEl, index)=>{
     const gaugeEl = gaugeRows[index];
@@ -661,6 +824,7 @@
     nameInput.addEventListener('input', ()=>{
       tank.name = nameInput.value;
       nameDisplay.textContent = tank.name;
+      renderPrediction();
       dismissBanner();
       save();
     });
